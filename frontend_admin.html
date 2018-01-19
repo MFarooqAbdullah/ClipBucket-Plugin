@@ -1,0 +1,159 @@
+
+
+
+<div include="frontend_admin_icon.html"></div>
+<div class="modal fade" id="frontend_admin_modal" role="dialog">
+	<div class="modal-dialog">
+	<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" vertical-align="90px">Action on Current Video
+				</h4>
+			</div>
+			<form id="do_frontend_administration" method="post" action="">
+				<div class="modal-body">
+					<input type="checkbox" id="DeactivateVid" name="DeactivateVid"> Deactivate Video<br>
+					<input type="checkbox" id="BanUser" name="BanUser" > Ban User
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-default submit-btn" id="subtn" > Submit</button/>
+			 		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+<div id="response"></div>
+
+
+
+
+<script type="text/javascript">
+			var Dvid = 0;
+
+			var Bvid = 0;
+
+
+			$('#frontend_admin_modal').on('shown.bs.modal', function ()
+			{
+				document.getElementById("do_frontend_administration").reset();
+			});
+
+			$(document).on("click","button#video_action",function()
+			{
+				  // alert($(this).attr("data-videoid"));
+				 videoid_clicked = $(this).attr("data-videoid") ;
+
+			});
+
+			$(document).on("click","button#video_action",function()
+			{
+				  // alert($(this).attr("data-userid"));
+
+				 userid_video_clicked = $(this).attr("data-userid") ;
+
+			});
+
+
+			$("#DeactivateVid").on("click", function()
+			{
+
+		  			 var Dec_vid = $("#DeactivateVid").is(":checked");
+
+		   			 if(Dec_vid)
+		   			 {
+		       			 // alert(JSON.stringify(Dvid));
+
+		       			 Dvid = 1;
+		   			 }
+		   			 // href="Dvid.deactivate={$video.videoid}"
+		   			 //  else
+		   			 // {
+		   			 // 	alert(JSON.stringify($("#BanUser").is(":checked")));
+		   			 // }
+				}
+			);
+
+			$("#BanUser").on("click", function()
+			{
+		  			var Ban_vid = $("#BanUser").is(":checked");
+
+		   			 if(Ban_vid)
+		   			 {
+		       			 // alert(JSON.stringify(Bvid));
+
+		       			 Bvid = 1;
+		   			 }
+		   			 // else
+		   			 // // {
+		   			 // // 	alert(JSON.stringify($("#BanUser").is(":checked")));
+		   			 // // }
+
+				}
+			);
+
+
+
+			$(document).on('click', '.submit-btn', function () {
+				$('#frontend_admin_modal').modal('hide');
+			})
+
+
+   function checkbox( e )
+    {
+        e.preventDefault();
+
+		var video_action_data =
+				{
+					video_id    : videoid_clicked,
+					Dvid_action : Dvid,
+					Bvid_action : Bvid,
+					user_id    : userid_video_clicked ,
+					mode : 'frontend_administration'
+				};
+
+        $.ajax({
+            url: 'ajax.php',
+
+            type: 'post',
+            data: video_action_data,
+            dataType: 'json',
+
+            success: function( data, textStatus)
+            {
+            	var result = $.parseJSON(video_action_data);
+            	 // jQuery.parseJSON( '{ "err": "Error" }' );
+            	// alert( result );
+
+                $('#response').html( data );
+                 // $("#frontend_admin_modal .Close").onclick();
+                // $("#frontend_admin_modal").modal("hide");
+
+                // $('#frontend_admin_modal').modal('toggle');
+
+
+            },
+            error: function( xhr, jqXhr, textStatus, errorThrown )
+            {
+            	 // alert(xhr.status);
+        		 // alert(thrownError);
+                 console.log( errorThrown );
+            }
+
+        });
+
+    }
+
+
+    $('#do_frontend_administration').submit( checkbox );
+
+
+
+
+
+</script>
+
+
+
